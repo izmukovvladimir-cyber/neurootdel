@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Нейроотдел — интенсив по AI-агентам</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0f0c;--bg2:#14180f;--card:#171b12;--line:#2a3320;--text:#eef0e6;--muted:#9aa388;--gold:#c8e04a;--gold2:#e8a33d;--code:#cfe8a0}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#1b2113 0%,var(--bg) 60%);color:var(--text);font-family:'Onest',system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto;padding:52px 22px 96px}
+header.hero{text-align:center;padding:40px 0 24px;border-bottom:1px solid var(--line);margin-bottom:30px}
+.kicker{letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:var(--gold);font-weight:700}
+h1.main{font-size:clamp(30px,5vw,50px);line-height:1.08;margin:12px 0;font-weight:800}
+header.hero p{color:var(--muted);font-size:15px;max-width:720px;margin:8px auto}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:9px;margin:6px 0 44px}
+.toc-item{display:flex;align-items:center;gap:11px;padding:13px 15px;background:var(--card);border:1px solid var(--line);border-radius:11px;color:var(--text);text-decoration:none;font-weight:600;transition:.15s}
+.toc-item:hover{border-color:var(--gold);transform:translateY(-2px)}
+.toc-num{color:var(--gold);font-weight:800;font-size:12px;border:1px solid var(--line);border-radius:7px;padding:3px 7px;min-width:32px;text-align:center}
+section{margin:0 0 40px;scroll-margin-top:20px}
+h1.day-title{font-size:clamp(24px,4vw,34px);font-weight:800;margin:46px 0 4px;padding-bottom:14px;border-bottom:2px solid var(--gold)}
+h2{font-size:20px;font-weight:700;margin:30px 0 10px;color:var(--text)}
+h3{font-size:16px;font-weight:700;margin:20px 0 8px;color:var(--gold2)}
+p{margin:10px 0;color:#dfe3d4}
+ul{margin:10px 0;padding-left:22px}
+li{margin:5px 0;color:#dfe3d4}
+b{color:#fff}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th{background:var(--bg2);color:var(--gold);text-align:left;padding:10px 13px;font-weight:700;font-size:13px}
+td{padding:10px 13px;border-top:1px solid var(--line);color:#dfe3d4;vertical-align:top}
+p code,li code,td code{background:#0a0c08;color:var(--code);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:.86em}
+.day-bar{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin:16px 0 22px;padding:13px 15px;background:linear-gradient(90deg,#1d2413,#171b12);border:1px solid var(--gold);border-radius:13px}
+.day-btn{background:var(--gold);color:#0d0f0c;border:none;border-radius:10px;padding:11px 17px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}
+.day-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.day-btn.ok{background:var(--gold2)}
+.day-hint{color:var(--muted);font-size:13px}
+.code-wrap{background:#0a0c08;border:1px solid var(--line);border-radius:13px;overflow:hidden;margin:12px 0}
+.code-bar{display:flex;align-items:center;justify-content:space-between;padding:7px 13px;background:var(--bg2);border-bottom:1px solid var(--line)}
+.code-lang{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.copy-btn{background:transparent;color:var(--gold);border:1px solid var(--line);border-radius:8px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s}
+.copy-btn:hover,.copy-btn.ok{background:var(--gold);color:#0d0f0c;border-color:var(--gold)}
+pre{margin:0;padding:15px 17px;overflow-x:auto}
+pre code{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;color:var(--code);white-space:pre}
+footer{text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:26px;margin-top:44px}
+.overlay{position:fixed;inset:0;background:rgba(5,7,4,.93);z-index:99;display:none;padding:18px;flex-direction:column}
+.overlay.show{display:flex}
+.ov-bar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ov-hint{color:var(--gold);font-weight:700;font-size:14px}
+.ov-close{background:var(--gold);color:#0d0f0c;border:none;border-radius:9px;padding:9px 16px;font-weight:800;cursor:pointer;font-family:inherit}
+.ov-text{flex:1;width:100%;background:#0a0c08;color:var(--code);border:1px solid var(--gold);border-radius:12px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;resize:none}
+::selection{background:var(--gold);color:#0d0f0c}
+</style></head>
+<body><div class="wrap">
+<header class="hero"><div class="kicker">Интенсив по AI-агентам · 7 дней</div>
+<h1 class="main">Нейроотдел — интенсив по AI-агентам</h1><p>Семь дней: от установки агента до команды нейросетей с общей памятью и монетизации. Каждый день — самостоятельный блок: понятная теория в двух фразах, затем готовые команды и промпты. Промпт копируешь в Claude, он ведёт тебя по шагам и подсказывает что делать. На ручных шагах (оплата, токены, регистрация) останавливаешься и делаешь сам.</p>
+<p>Модели: Opus 4.8 — основная (код, ревью, решения). Sonnet 4.6 — субагенты (ресёрч, массовая обработка).</p></header>
+<nav class="toc"><a class="toc-item" href="#d1"><span class="toc-num">01</span>День 1 — Настройка Claude Code</a>
+<a class="toc-item" href="#d2"><span class="toc-num">02</span>День 2 — Проект с нуля</a>
+<a class="toc-item" href="#d3"><span class="toc-num">03</span>День 3 — Общая память (Second Brain)</a>
+<a class="toc-item" href="#d4"><span class="toc-num">04</span>День 4 — Команда агентов и соцсети</a>
+<a class="toc-item" href="#d5"><span class="toc-num">05</span>День 5 — Скиллы и плагины</a>
+<a class="toc-item" href="#d6"><span class="toc-num">06</span>День 6 — Автономия агентов</a>
+<a class="toc-item" href="#d7"><span class="toc-num">07</span>День 7 — Монетизация и продакшн</a></nav>
+<section id="d1"><h1 class="day-title">День 1 — Настройка Claude Code</h1><div class="day-bar"><button class="day-btn" onclick="cpday(this)">📋 Скопировать весь день для Claude</button><span class="day-hint">вставь в Claude — он проведёт по шагам</span><textarea class="day-md" hidden>Ты — мой персональный наставник по настройке AI-агента. Веди меня по этому дню строго по шагам, по одному за раз: коротко объясни что сейчас делаем, дай одну готовую команду или промпт, скажи куда её вставить (Терминал или Claude Code), дождись моего «готово» и только потом следующий шаг. Если что-то пошло не так — помоги починить, не иди дальше. Не вываливай все шаги сразу. Начни с первого шага.
+
+---
+
+# День 1 — Настройка Claude Code
+
+Установка агента, базовые правила, первые скиллы, подключение GitHub. К концу дня — рабочий Claude Code, который понимает кто ты и действует по твоим правилам.
+
+## 1. Что такое Claude Code
+
+Claude Code — не чат. Это агент, который сам выполняет действия на компьютере: пишет код, запускает команды, создаёт и правит файлы, помнит контекст между сессиями. ChatGPT отвечает словами — Claude Code делает: ты говоришь «сделай», он делает. Работает в терминале или внутри редактора Cursor / VS Code.
+
+Понадобится: macOS / Linux / Windows (WSL2), Node.js 22+, Git, подписка Anthropic (Pro 20$ или Max 100$).
+
+## 2. Установка
+
+Терминал — окно, где команды отдают текстом, а не мышкой. Открой его и выполни блок:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude login
+claude --version
+```
+
+`claude login` откроет вход через браузер. После авторизации `claude --version` покажет номер версии.
+
+## 3. CLAUDE.md — паспорт агента
+
+CLAUDE.md — файл, который агент читает в начале каждой сессии. В нём записано: кто ты, на каком языке отвечать, какой стек, что можно делать самому, а что только с твоего разрешения. Память агента живёт в этом файле, а не в чате: диалог стирается, CLAUDE.md остаётся. Без него агент — чистый лист.
+
+Создай проект и сгенерируй стартовый файл командой `/init`:
+
+```bash
+mkdir my-project &amp;&amp; cd my-project &amp;&amp; claude
+/init
+```
+
+Затем доведи его под себя. Вставь в Claude промпт:
+
+```text
+Собери CLAUDE.md для этого проекта. Сначала просканируй репозиторий, потом задай вопросы по очереди: кто я и язык общения; стек (язык, фреймворк, база, деплой); команды запуска и тестов; что тебе можно делать автономно, а что только с моего разрешения; правила git. После ответов сгенерируй файл по секциям Identity / Project / Workflow / Boundaries / Style, до 200 строк, и сохрани в ./CLAUDE.md.
+```
+
+## 4. GitHub — где живёт код
+
+Репозиторий — папка проекта под версионным контролем. Git ведёт историю изменений (можно откатиться назад), GitHub хранит этот код в облаке. Файл `.env` с секретами в репозиторий не выкладывают никогда.
+
+```bash
+gh auth login
+gh repo create my-project --private --source=. --remote=origin --push
+```
+
+Или поручи агенту — вставь в Claude:
+
+```text
+Подключи проект к GitHub. Проверь и при необходимости установи gh CLI, проведи меня через gh auth login. Собери .gitignore под мой стек и обязательно добавь .env, *.key, *.pem, secrets/. Сделай первый коммит и создай приватный репозиторий с пушем. После каждого шага говори что получилось.
+```
+
+## 5. Скиллы — готовые навыки агента
+
+Скилл — готовая инструкция-навык, агент включает её сам по ключевым словам. Поставь три базовых.
+
+| Скилл | Что делает |
+|---|---|
+| Superpowers | Методология: сначала план и тест, потом код |
+| senior-brainstorm | Архитектор: стек, дизайн системы |
+| telegram-bot-builder | Сборка Telegram-ботов |
+
+```bash
+/plugin install superpowers@claude-plugins-official
+claude skill add https://github.com/qwwiwi/agentos-skills/raw/main/senior-brainstorm.skill
+claude skill add https://github.com/qwwiwi/agentos-skills/raw/main/telegram-bot-builder.skill
+```
+
+## 6. Автономный режим и экономия
+
+Чтобы агент не спрашивал разрешения на каждое действие, есть три режима (переключение Shift+Tab): обычный, авто-правки, полностью автономный. Опасные команды (удаление, force push) остаются под запретом всегда. Настройки и список разрешённых команд — в `~/.claude/settings.json`.
+
+Контекст — память агента в рамках одной сессии. Чтобы тратить её экономно, поставь предел сжатия:
+
+```bash
+export CLAUDE_CODE_AUTO_COMPACT_WINDOW=400000
+```
+
+## Результат дня 1
+
+- Claude Code установлен и авторизован
+- CLAUDE.md настроен под тебя
+- Проект на GitHub, первый коммит сделан
+- Три базовых скилла на месте
+- Понятен автономный режим и экономия контекста
+
+---
+</textarea></div><p>Установка агента, базовые правила, первые скиллы, подключение GitHub. К концу дня — рабочий Claude Code, который понимает кто ты и действует по твоим правилам.</p>
+<h2>1. Что такое Claude Code</h2>
+<p>Claude Code — не чат. Это агент, который сам выполняет действия на компьютере: пишет код, запускает команды, создаёт и правит файлы, помнит контекст между сессиями. ChatGPT отвечает словами — Claude Code делает: ты говоришь «сделай», он делает. Работает в терминале или внутри редактора Cursor / VS Code.</p>
+<p>Понадобится: macOS / Linux / Windows (WSL2), Node.js 22+, Git, подписка Anthropic (Pro 20$ или Max 100$).</p>
+<h2>2. Установка</h2>
+<p>Терминал — окно, где команды отдают текстом, а не мышкой. Открой его и выполни блок:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>npm install -g @anthropic-ai/claude-code
+claude login
+claude --version</code></pre></div>
+<p><code>claude login</code> откроет вход через браузер. После авторизации <code>claude --version</code> покажет номер версии.</p>
+<h2>3. CLAUDE.md — паспорт агента</h2>
+<p>CLAUDE.md — файл, который агент читает в начале каждой сессии. В нём записано: кто ты, на каком языке отвечать, какой стек, что можно делать самому, а что только с твоего разрешения. Память агента живёт в этом файле, а не в чате: диалог стирается, CLAUDE.md остаётся. Без него агент — чистый лист.</p>
+<p>Создай проект и сгенерируй стартовый файл командой <code>/init</code>:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>mkdir my-project &amp;&amp; cd my-project &amp;&amp; claude
+/init</code></pre></div>
+<p>Затем доведи его под себя. Вставь в Claude промпт:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Собери CLAUDE.md для этого проекта. Сначала просканируй репозиторий, потом задай вопросы по очереди: кто я и язык общения; стек (язык, фреймворк, база, деплой); команды запуска и тестов; что тебе можно делать автономно, а что только с моего разрешения; правила git. После ответов сгенерируй файл по секциям Identity / Project / Workflow / Boundaries / Style, до 200 строк, и сохрани в ./CLAUDE.md.</code></pre></div>
+<h2>4. GitHub — где живёт код</h2>
+<p>Репозиторий — папка проекта под версионным контролем. Git ведёт историю изменений (можно откатиться назад), GitHub хранит этот код в облаке. Файл <code>.env</code> с секретами в репозиторий не выкладывают никогда.</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>gh auth login
+gh repo create my-project --private --source=. --remote=origin --push</code></pre></div>
+<p>Или поручи агенту — вставь в Claude:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Подключи проект к GitHub. Проверь и при необходимости установи gh CLI, проведи меня через gh auth login. Собери .gitignore под мой стек и обязательно добавь .env, *.key, *.pem, secrets/. Сделай первый коммит и создай приватный репозиторий с пушем. После каждого шага говори что получилось.</code></pre></div>
+<h2>5. Скиллы — готовые навыки агента</h2>
+<p>Скилл — готовая инструкция-навык, агент включает её сам по ключевым словам. Поставь три базовых.</p>
+<table><thead><tr><th>Скилл</th><th>Что делает</th></tr></thead><tbody><tr><td>Superpowers</td><td>Методология: сначала план и тест, потом код</td></tr><tr><td>senior-brainstorm</td><td>Архитектор: стек, дизайн системы</td></tr><tr><td>telegram-bot-builder</td><td>Сборка Telegram-ботов</td></tr></tbody></table>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>/plugin install superpowers@claude-plugins-official
+claude skill add https://github.com/qwwiwi/agentos-skills/raw/main/senior-brainstorm.skill
+claude skill add https://github.com/qwwiwi/agentos-skills/raw/main/telegram-bot-builder.skill</code></pre></div>
+<h2>6. Автономный режим и экономия</h2>
+<p>Чтобы агент не спрашивал разрешения на каждое действие, есть три режима (переключение Shift+Tab): обычный, авто-правки, полностью автономный. Опасные команды (удаление, force push) остаются под запретом всегда. Настройки и список разрешённых команд — в <code>~/.claude/settings.json</code>.</p>
+<p>Контекст — память агента в рамках одной сессии. Чтобы тратить её экономно, поставь предел сжатия:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>export CLAUDE_CODE_AUTO_COMPACT_WINDOW=400000</code></pre></div>
+<h2>Результат дня 1</h2>
+<ul><li>Claude Code установлен и авторизован</li><li>CLAUDE.md настроен под тебя</li><li>Проект на GitHub, первый коммит сделан</li><li>Три базовых скилла на месте</li><li>Понятен автономный режим и экономия контекста</li></ul></section>
+<section id="d2"><h1 class="day-title">День 2 — Проект с нуля</h1><div class="day-bar"><button class="day-btn" onclick="cpday(this)">📋 Скопировать весь день для Claude</button><span class="day-hint">вставь в Claude — он проведёт по шагам</span><textarea class="day-md" hidden>Ты — мой персональный наставник по настройке AI-агента. Веди меня по этому дню строго по шагам, по одному за раз: коротко объясни что сейчас делаем, дай одну готовую команду или промпт, скажи куда её вставить (Терминал или Claude Code), дождись моего «готово» и только потом следующий шаг. Если что-то пошло не так — помоги починить, не иди дальше. Не вываливай все шаги сразу. Начни с первого шага.
+
+---
+
+# День 2 — Проект с нуля
+
+От пустой папки до рабочего приложения с тестовой и боевой площадкой. К концу дня — MVP, развёрнутый на staging, с пройденным аудитом безопасности.
+
+## 1. Правила и репозиторий
+
+Перед кодом агенту нужны три вещи: он сам, правила и репозиторий. Папка `.claude` хранит настройки агента внутри проекта (правила, скиллы) и едет вместе с кодом в git. CLAUDE.md держи коротким (до 150 строк), детали выноси в отдельные файлы правил.
+
+Шаблон CLAUDE.md проекта:
+
+```markdown
+# &lt;Проект&gt;
+## Mission — что строим и для кого, одно предложение
+## Stack — Next.js + TypeScript; Supabase (база, вход, хранилище); Tailwind; тесты Playwright
+## Architecture — app/ (страницы); components/ (интерфейс); lib/ (серверная логика); tests/
+## Commands — dev / lint / test / build
+## Hard rules — без any в TypeScript; стили внутри компонента; без зелёных тестов не коммитим
+## Environments — Local; Staging; Production
+## Style — общение по-русски, код и комментарии по-английски, без emoji
+```
+
+## 2. Дизайн до кода
+
+MVP — минимальная рабочая версия продукта. Прежде чем писать код, зафиксируй как продукт выглядит, в файле `design.md`: цвета и шрифты, компоненты, экраны, состояния (загрузка, пусто, ошибка). Агент берёт оттуда стиль и не выдумывает каждый раз заново.
+
+```markdown
+# Design
+## Tokens — цвета, шрифты (Inter + заголовочный), отступы, скругления
+## Components — кнопка (варианты, размеры); карточка; поле ввода
+## Screens — / (лендинг); /login; /app; /settings
+## States — загрузка (скелетон); пусто (иллюстрация + кнопка); ошибка (текст + повтор)
+```
+
+## 3. Бэкенд под нагрузку
+
+Бэкенд — то, что считает и хранит данные на сервере. Выбор зависит от числа пользователей.
+
+| Сколько пользователей | Что брать |
+|---|---|
+| 10–100 (хобби, MVP) | Обычный VPS + SQLite, дёшево |
+| 50 000+ (продукт, SaaS) | Supabase или Yandex Cloud |
+| Внутренний дашборд | Firebase, бесплатно годами |
+
+Supabase — готовый бэкенд: база данных, вход пользователей, хранилище файлов из коробки. Поднимается за 15 минут, берём его. RLS в нём — правила доступа: каждый видит только свои данные.
+
+## 4. Сборка одним промптом
+
+У агента уже всё есть: CLAUDE.md, дизайн, выбранный бэкенд. Вставь в Claude:
+
+```text
+Собери MVP по нашему CLAUDE.md и design.md. Проговори план, создай структуру по разделу Architecture, свёрстай компоненты по дизайну, подключи базу, запусти локально, поймай ошибки и почини. Покажи результат.
+```
+
+## 5. Площадки: тест и бой
+
+Три окружения: Local (свой компьютер, ломаем спокойно), Staging — тестовая площадка с отдельной базой (проверяем), Production — боевая, где живые люди и деньги. Тесты гоняют против staging, никогда против боевой. Деплой — выкладка проекта на сервер.
+
+```text
+Подготовь проект к staging и production. Сделай .env.example с пустыми заготовками всех ключей, добавь .env в .gitignore, вынеси адреса в переменные окружения. Опиши в README как поднять отдельный staging. Настрой GitHub Action: при изменении гонять тесты и выкладывать staging. Покажи изменения, не пушь.
+```
+
+## 6. Ревью и аудит безопасности
+
+Перед боем прогоняем код через проверки по порядку: линтер (автопроверка стиля и ошибок), затем тесты, затем аудит безопасности. Вставь в Claude:
+
+```text
+Проведи аудит безопасности фронта и бэка по семи областям: секреты в коде и .env; что утекает во фронтенд; проверка прав в каждом запросе; правила доступа в базе; подписи вебхуков; заголовки и CORS; уязвимые зависимости. Отчёт таблицей с уровнями Critical / High / Medium / Low. После отчёта не чини, жди подтверждения.
+```
+
+Закрытие найденного — отдельным промптом «закрой все critical и high», затем перепрогон до нуля критичных.
+
+## Результат дня 2
+
+- Репозиторий с CLAUDE.md, design.md и правилами
+- MVP на Supabase, работает локально
+- Staging с отдельной базой и автодеплоем
+- Зелёные линтер и тесты
+- Аудит безопасности без критичных находок
+
+---
+</textarea></div><p>От пустой папки до рабочего приложения с тестовой и боевой площадкой. К концу дня — MVP, развёрнутый на staging, с пройденным аудитом безопасности.</p>
+<h2>1. Правила и репозиторий</h2>
+<p>Перед кодом агенту нужны три вещи: он сам, правила и репозиторий. Папка <code>.claude</code> хранит настройки агента внутри проекта (правила, скиллы) и едет вместе с кодом в git. CLAUDE.md держи коротким (до 150 строк), детали выноси в отдельные файлы правил.</p>
+<p>Шаблон CLAUDE.md проекта:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">markdown</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code># &lt;Проект&gt;
+## Mission — что строим и для кого, одно предложение
+## Stack — Next.js + TypeScript; Supabase (база, вход, хранилище); Tailwind; тесты Playwright
+## Architecture — app/ (страницы); components/ (интерфейс); lib/ (серверная логика); tests/
+## Commands — dev / lint / test / build
+## Hard rules — без any в TypeScript; стили внутри компонента; без зелёных тестов не коммитим
+## Environments — Local; Staging; Production
+## Style — общение по-русски, код и комментарии по-английски, без emoji</code></pre></div>
+<h2>2. Дизайн до кода</h2>
+<p>MVP — минимальная рабочая версия продукта. Прежде чем писать код, зафиксируй как продукт выглядит, в файле <code>design.md</code>: цвета и шрифты, компоненты, экраны, состояния (загрузка, пусто, ошибка). Агент берёт оттуда стиль и не выдумывает каждый раз заново.</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">markdown</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code># Design
+## Tokens — цвета, шрифты (Inter + заголовочный), отступы, скругления
+## Components — кнопка (варианты, размеры); карточка; поле ввода
+## Screens — / (лендинг); /login; /app; /settings
+## States — загрузка (скелетон); пусто (иллюстрация + кнопка); ошибка (текст + повтор)</code></pre></div>
+<h2>3. Бэкенд под нагрузку</h2>
+<p>Бэкенд — то, что считает и хранит данные на сервере. Выбор зависит от числа пользователей.</p>
+<table><thead><tr><th>Сколько пользователей</th><th>Что брать</th></tr></thead><tbody><tr><td>10–100 (хобби, MVP)</td><td>Обычный VPS + SQLite, дёшево</td></tr><tr><td>50 000+ (продукт, SaaS)</td><td>Supabase или Yandex Cloud</td></tr><tr><td>Внутренний дашборд</td><td>Firebase, бесплатно годами</td></tr></tbody></table>
+<p>Supabase — готовый бэкенд: база данных, вход пользователей, хранилище файлов из коробки. Поднимается за 15 минут, берём его. RLS в нём — правила доступа: каждый видит только свои данные.</p>
+<h2>4. Сборка одним промптом</h2>
+<p>У агента уже всё есть: CLAUDE.md, дизайн, выбранный бэкенд. Вставь в Claude:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Собери MVP по нашему CLAUDE.md и design.md. Проговори план, создай структуру по разделу Architecture, свёрстай компоненты по дизайну, подключи базу, запусти локально, поймай ошибки и почини. Покажи результат.</code></pre></div>
+<h2>5. Площадки: тест и бой</h2>
+<p>Три окружения: Local (свой компьютер, ломаем спокойно), Staging — тестовая площадка с отдельной базой (проверяем), Production — боевая, где живые люди и деньги. Тесты гоняют против staging, никогда против боевой. Деплой — выкладка проекта на сервер.</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Подготовь проект к staging и production. Сделай .env.example с пустыми заготовками всех ключей, добавь .env в .gitignore, вынеси адреса в переменные окружения. Опиши в README как поднять отдельный staging. Настрой GitHub Action: при изменении гонять тесты и выкладывать staging. Покажи изменения, не пушь.</code></pre></div>
+<h2>6. Ревью и аудит безопасности</h2>
+<p>Перед боем прогоняем код через проверки по порядку: линтер (автопроверка стиля и ошибок), затем тесты, затем аудит безопасности. Вставь в Claude:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Проведи аудит безопасности фронта и бэка по семи областям: секреты в коде и .env; что утекает во фронтенд; проверка прав в каждом запросе; правила доступа в базе; подписи вебхуков; заголовки и CORS; уязвимые зависимости. Отчёт таблицей с уровнями Critical / High / Medium / Low. После отчёта не чини, жди подтверждения.</code></pre></div>
+<p>Закрытие найденного — отдельным промптом «закрой все critical и high», затем перепрогон до нуля критичных.</p>
+<h2>Результат дня 2</h2>
+<ul><li>Репозиторий с CLAUDE.md, design.md и правилами</li><li>MVP на Supabase, работает локально</li><li>Staging с отдельной базой и автодеплоем</li><li>Зелёные линтер и тесты</li><li>Аудит безопасности без критичных находок</li></ul></section>
+<section id="d3"><h1 class="day-title">День 3 — Общая память (Second Brain)</h1><div class="day-bar"><button class="day-btn" onclick="cpday(this)">📋 Скопировать весь день для Claude</button><span class="day-hint">вставь в Claude — он проведёт по шагам</span><textarea class="day-md" hidden>Ты — мой персональный наставник по настройке AI-агента. Веди меня по этому дню строго по шагам, по одному за раз: коротко объясни что сейчас делаем, дай одну готовую команду или промпт, скажи куда её вставить (Терминал или Claude Code), дождись моего «готово» и только потом следующий шаг. Если что-то пошло не так — помоги починить, не иди дальше. Не вываливай все шаги сразу. Начни с первого шага.
+
+---
+
+# День 3 — Общая память (Second Brain)
+
+Один «второй мозг» на всю команду агентов: куда все пишут и откуда все читают. К концу дня — общая память на сервере, в которую попадают данные из всех каналов.
+
+## 1. Зачем общая память
+
+Память агента в чате стирается. Чтобы знания копились, нужен отдельный слой — Second Brain: база на сервере, где факты, решения и заметки хранятся постоянно и ищутся по смыслу. Один общий «мозг» для всех агентов лучше, чем у каждого своя записная книжка.
+
+Память делится на слои: горячая (последнее, всегда под рукой), тёплая (решения, подгружается на старте), холодная (архив, по запросу).
+
+## 2. Из чего состоит
+
+gbrain — наша реализация второго мозга. Внутри: база с поиском по смыслу и несколько серверов-переходников (MCP), через которые агент пишет и читает.
+
+| Сервер | Порт | Назначение |
+|---|---|---|
+| memory | 8767 | запись заметок |
+| recall | 8768 | поиск по смыслу |
+| swarm | 8766 | обмен задачами между агентами |
+| tasks | 8769 | задачи |
+
+MCP — протокол-переходник: через него агент подключает внешние инструменты (память, соцсети, задачи). Embedding — способ хранить смысл текста числами, чтобы искать по смыслу, а не по точному слову.
+
+## 3. Развёртывание на сервере
+
+VPS — арендованный сервер в облаке, работает круглосуточно. Поставь общую память под отдельным пользователем. Вставь в Claude:
+
+```text
+Ты мой DevOps-агент. Разверни общую память (Second Brain) на этом VPS под отдельным пользователем. Создай пользователя, разверни систему из репозитория, подними серверы памяти, заведи первого агента для мониторинга и приёма входящих. Команды давай блоками, после каждого этапа показывай что получилось, в конце сделай сквозной тест. Токены и ключи не выводи в ответ.
+```
+
+## 4. Подключение агента к памяти
+
+Агент читает свою память слоями через подключения в CLAUDE.md:
+
+```text
+@core/USER.md
+@core/rules.md
+@core/warm/decisions.md
+@core/hot/handoff.md
+```
+
+Каждый агент пишет в общую память по своим правам (RBAC): своя зона своя, чужое менять нельзя. Запись идёт сразу в двух местах — локальный файл и общая база (dual-write), чтобы ничего не терялось.
+
+## 5. Источники наполнения
+
+В общую память стекаются данные из всех каналов: Telegram, Instagram, YouTube, X, веб-страницы, голосовые, браузер. Каждый канал — свой скилл, который кладёт заметку в базу. Дальше всё ищется по смыслу за пару секунд.
+
+## Результат дня 3
+
+- Общая память развёрнута на сервере
+- Серверы памяти подняты, сквозной тест прошёл
+- Первый агент подключён, читает память слоями
+- Понятно как наполнять память из каналов
+
+---
+</textarea></div><p>Один «второй мозг» на всю команду агентов: куда все пишут и откуда все читают. К концу дня — общая память на сервере, в которую попадают данные из всех каналов.</p>
+<h2>1. Зачем общая память</h2>
+<p>Память агента в чате стирается. Чтобы знания копились, нужен отдельный слой — Second Brain: база на сервере, где факты, решения и заметки хранятся постоянно и ищутся по смыслу. Один общий «мозг» для всех агентов лучше, чем у каждого своя записная книжка.</p>
+<p>Память делится на слои: горячая (последнее, всегда под рукой), тёплая (решения, подгружается на старте), холодная (архив, по запросу).</p>
+<h2>2. Из чего состоит</h2>
+<p>gbrain — наша реализация второго мозга. Внутри: база с поиском по смыслу и несколько серверов-переходников (MCP), через которые агент пишет и читает.</p>
+<table><thead><tr><th>Сервер</th><th>Порт</th><th>Назначение</th></tr></thead><tbody><tr><td>memory</td><td>8767</td><td>запись заметок</td></tr><tr><td>recall</td><td>8768</td><td>поиск по смыслу</td></tr><tr><td>swarm</td><td>8766</td><td>обмен задачами между агентами</td></tr><tr><td>tasks</td><td>8769</td><td>задачи</td></tr></tbody></table>
+<p>MCP — протокол-переходник: через него агент подключает внешние инструменты (память, соцсети, задачи). Embedding — способ хранить смысл текста числами, чтобы искать по смыслу, а не по точному слову.</p>
+<h2>3. Развёртывание на сервере</h2>
+<p>VPS — арендованный сервер в облаке, работает круглосуточно. Поставь общую память под отдельным пользователем. Вставь в Claude:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Ты мой DevOps-агент. Разверни общую память (Second Brain) на этом VPS под отдельным пользователем. Создай пользователя, разверни систему из репозитория, подними серверы памяти, заведи первого агента для мониторинга и приёма входящих. Команды давай блоками, после каждого этапа показывай что получилось, в конце сделай сквозной тест. Токены и ключи не выводи в ответ.</code></pre></div>
+<h2>4. Подключение агента к памяти</h2>
+<p>Агент читает свою память слоями через подключения в CLAUDE.md:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>@core/USER.md
+@core/rules.md
+@core/warm/decisions.md
+@core/hot/handoff.md</code></pre></div>
+<p>Каждый агент пишет в общую память по своим правам (RBAC): своя зона своя, чужое менять нельзя. Запись идёт сразу в двух местах — локальный файл и общая база (dual-write), чтобы ничего не терялось.</p>
+<h2>5. Источники наполнения</h2>
+<p>В общую память стекаются данные из всех каналов: Telegram, Instagram, YouTube, X, веб-страницы, голосовые, браузер. Каждый канал — свой скилл, который кладёт заметку в базу. Дальше всё ищется по смыслу за пару секунд.</p>
+<h2>Результат дня 3</h2>
+<ul><li>Общая память развёрнута на сервере</li><li>Серверы памяти подняты, сквозной тест прошёл</li><li>Первый агент подключён, читает память слоями</li><li>Понятно как наполнять память из каналов</li></ul></section>
+<section id="d4"><h1 class="day-title">День 4 — Команда агентов и соцсети</h1><div class="day-bar"><button class="day-btn" onclick="cpday(this)">📋 Скопировать весь день для Claude</button><span class="day-hint">вставь в Claude — он проведёт по шагам</span><textarea class="day-md" hidden>Ты — мой персональный наставник по настройке AI-агента. Веди меня по этому дню строго по шагам, по одному за раз: коротко объясни что сейчас делаем, дай одну готовую команду или промпт, скажи куда её вставить (Терминал или Claude Code), дождись моего «готово» и только потом следующий шаг. Если что-то пошло не так — помоги починить, не иди дальше. Не вываливай все шаги сразу. Начни с первого шага.
+
+---
+
+# День 4 — Команда агентов и соцсети
+
+Несколько агентов с ролями и общей памятью плюс навыки работы с соцсетями. К концу дня — команда (кодер, память, маркетолог) и подключённые каналы.
+
+## 1. Три агента с ролями
+
+Каждый агент — отдельная папка с своим CLAUDE.md и своим Telegram-ботом, но память общая. Заведём троих: кодер, агент памяти, маркетолог.
+
+```text
+Подними команду из трёх агентов по инструкции AGENTIC-SWARM. Каждому поставь скилл Superpowers. Кодер — по шаблону coder, агент памяти — по шаблону inbox-monitoring, маркетолог — по шаблону marketer. Для каждого создай рабочую папку, скачай шаблон CLAUDE.md, установи скилл. Запусти каждого и убедись, что он представился своей ролью.
+```
+
+Боты создаются в @BotFather (официальный бот Telegram для создания ботов): три бота — три токена в файл секретов.
+
+## 2. Как агенты общаются
+
+Субагент — отдельный агент под одну подзадачу: главный раздаёт работу. Между собой агенты общаются через общую память (swarm), а не через ботов друг друга. При старте каждый агент проверяет, нет ли для него новых задач.
+
+## 3. Навыки соцсетей
+
+Ключи доступа храним в файле секретов, никогда в CLAUDE.md.
+
+| Канал | Инструмент | Доступ |
+|---|---|---|
+| Instagram | HikerAPI | от 30$/мес, рилсы и конкуренты |
+| Telegram | telegram-chip | личный аккаунт через my.telegram.org |
+| X (Twitter) | Grok API / X API | чтение от 5$/1000, постинг поштучно |
+| YouTube | Data API v3 | бесплатно, 10000 запросов в день |
+
+HikerAPI — сервис, через который агент читает Instagram без официального доступа. telegram-chip — подключение твоего личного Telegram-аккаунта, чтобы агент читал любые чаты и каналы (один аккаунт — один процесс, иначе блокировка).
+
+## 4. Починка через репозиторий
+
+Если что-то сломалось, не гадай — дай агенту ссылку на справочники. Вставь в Claude:
+
+```text
+У меня баг: &lt;опиши одной фразой&gt;. Прочитай troubleshooting и install-paths из репозитория agentos-skills, найди похожую проблему, диагностируй и предложи фикс конкретными командами.
+```
+
+## Результат дня 4
+
+- Три агента с ролями и общей памятью
+- Каждый отвечает в своём Telegram-боте
+- Подключены навыки соцсетей с ключами в секретах
+- Понятен механизм самопочинки через справочники
+
+---
+</textarea></div><p>Несколько агентов с ролями и общей памятью плюс навыки работы с соцсетями. К концу дня — команда (кодер, память, маркетолог) и подключённые каналы.</p>
+<h2>1. Три агента с ролями</h2>
+<p>Каждый агент — отдельная папка с своим CLAUDE.md и своим Telegram-ботом, но память общая. Заведём троих: кодер, агент памяти, маркетолог.</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Подними команду из трёх агентов по инструкции AGENTIC-SWARM. Каждому поставь скилл Superpowers. Кодер — по шаблону coder, агент памяти — по шаблону inbox-monitoring, маркетолог — по шаблону marketer. Для каждого создай рабочую папку, скачай шаблон CLAUDE.md, установи скилл. Запусти каждого и убедись, что он представился своей ролью.</code></pre></div>
+<p>Боты создаются в @BotFather (официальный бот Telegram для создания ботов): три бота — три токена в файл секретов.</p>
+<h2>2. Как агенты общаются</h2>
+<p>Субагент — отдельный агент под одну подзадачу: главный раздаёт работу. Между собой агенты общаются через общую память (swarm), а не через ботов друг друга. При старте каждый агент проверяет, нет ли для него новых задач.</p>
+<h2>3. Навыки соцсетей</h2>
+<p>Ключи доступа храним в файле секретов, никогда в CLAUDE.md.</p>
+<table><thead><tr><th>Канал</th><th>Инструмент</th><th>Доступ</th></tr></thead><tbody><tr><td>Instagram</td><td>HikerAPI</td><td>от 30$/мес, рилсы и конкуренты</td></tr><tr><td>Telegram</td><td>telegram-chip</td><td>личный аккаунт через my.telegram.org</td></tr><tr><td>X (Twitter)</td><td>Grok API / X API</td><td>чтение от 5$/1000, постинг поштучно</td></tr><tr><td>YouTube</td><td>Data API v3</td><td>бесплатно, 10000 запросов в день</td></tr></tbody></table>
+<p>HikerAPI — сервис, через который агент читает Instagram без официального доступа. telegram-chip — подключение твоего личного Telegram-аккаунта, чтобы агент читал любые чаты и каналы (один аккаунт — один процесс, иначе блокировка).</p>
+<h2>4. Починка через репозиторий</h2>
+<p>Если что-то сломалось, не гадай — дай агенту ссылку на справочники. Вставь в Claude:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>У меня баг: &lt;опиши одной фразой&gt;. Прочитай troubleshooting и install-paths из репозитория agentos-skills, найди похожую проблему, диагностируй и предложи фикс конкретными командами.</code></pre></div>
+<h2>Результат дня 4</h2>
+<ul><li>Три агента с ролями и общей памятью</li><li>Каждый отвечает в своём Telegram-боте</li><li>Подключены навыки соцсетей с ключами в секретах</li><li>Понятен механизм самопочинки через справочники</li></ul></section>
+<section id="d5"><h1 class="day-title">День 5 — Скиллы и плагины</h1><div class="day-bar"><button class="day-btn" onclick="cpday(this)">📋 Скопировать весь день для Claude</button><span class="day-hint">вставь в Claude — он проведёт по шагам</span><textarea class="day-md" hidden>Ты — мой персональный наставник по настройке AI-агента. Веди меня по этому дню строго по шагам, по одному за раз: коротко объясни что сейчас делаем, дай одну готовую команду или промпт, скажи куда её вставить (Терминал или Claude Code), дождись моего «готово» и только потом следующий шаг. Если что-то пошло не так — помоги починить, не иди дальше. Не вываливай все шаги сразу. Начни с первого шага.
+
+---
+
+# День 5 — Скиллы и плагины
+
+Каталог готовых навыков и создание своих. К концу дня — подобранный под твои задачи набор скиллов и один собственный скилл.
+
+## 1. Скилл и плагин
+
+Скилл — навык-инструкция, включается по ключевым словам. Плагин — пакет из скиллов, хуков и подключений, ставится одной командой. В каталоге 52 скилла по категориям: ресёрч, кодинг, контент, соцсети, AI-генерация, продажи, системные. Ставить всё не нужно — бери 3–5 под свою работу.
+
+## 2. Установка
+
+```bash
+cd ~/.claude/skills
+git clone https://github.com/qwwiwi/agentos-skills-public.git agentos
+cp -r ~/.claude/skills/agentos/skills/transcript ~/.claude/skills/
+git clone https://github.com/obra/superpowers.git
+```
+
+## 3. Подбор под себя
+
+Вставь в Claude:
+
+```text
+Я работаю в нише: &lt;опиши&gt;. Регулярные задачи на неделю: &lt;перечисли&gt;. Из каталога AgentOS и Superpowers подбери пять скиллов, которые сильнее всего ускорят именно мою работу. Для каждого: имя, что делает, почему именно мне. Только нужное, без воды.
+```
+
+## 4. Свой скилл
+
+skill-creator — скилл, который помогает собрать новый скилл по шагам. Триггер — слова-ключи, по которым навык включается. Вставь в Claude:
+
+```text
+Хочу создать скилл для &lt;задача&gt;. Проведи меня через skill-creator: задай вопросы про крайние случаи, формат входа и выхода, критерии успеха. В конце дай готовый SKILL.md и шаги установки и проверки.
+```
+
+## Результат дня 5
+
+- Понятна разница скилл / плагин и весь каталог
+- Установлены 3–5 скиллов под твою нишу
+- Собран один собственный скилл через skill-creator
+
+---
+</textarea></div><p>Каталог готовых навыков и создание своих. К концу дня — подобранный под твои задачи набор скиллов и один собственный скилл.</p>
+<h2>1. Скилл и плагин</h2>
+<p>Скилл — навык-инструкция, включается по ключевым словам. Плагин — пакет из скиллов, хуков и подключений, ставится одной командой. В каталоге 52 скилла по категориям: ресёрч, кодинг, контент, соцсети, AI-генерация, продажи, системные. Ставить всё не нужно — бери 3–5 под свою работу.</p>
+<h2>2. Установка</h2>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>cd ~/.claude/skills
+git clone https://github.com/qwwiwi/agentos-skills-public.git agentos
+cp -r ~/.claude/skills/agentos/skills/transcript ~/.claude/skills/
+git clone https://github.com/obra/superpowers.git</code></pre></div>
+<h2>3. Подбор под себя</h2>
+<p>Вставь в Claude:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Я работаю в нише: &lt;опиши&gt;. Регулярные задачи на неделю: &lt;перечисли&gt;. Из каталога AgentOS и Superpowers подбери пять скиллов, которые сильнее всего ускорят именно мою работу. Для каждого: имя, что делает, почему именно мне. Только нужное, без воды.</code></pre></div>
+<h2>4. Свой скилл</h2>
+<p>skill-creator — скилл, который помогает собрать новый скилл по шагам. Триггер — слова-ключи, по которым навык включается. Вставь в Claude:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Хочу создать скилл для &lt;задача&gt;. Проведи меня через skill-creator: задай вопросы про крайние случаи, формат входа и выхода, критерии успеха. В конце дай готовый SKILL.md и шаги установки и проверки.</code></pre></div>
+<h2>Результат дня 5</h2>
+<ul><li>Понятна разница скилл / плагин и весь каталог</li><li>Установлены 3–5 скиллов под твою нишу</li><li>Собран один собственный скилл через skill-creator</li></ul></section>
+<section id="d6"><h1 class="day-title">День 6 — Автономия агентов</h1><div class="day-bar"><button class="day-btn" onclick="cpday(this)">📋 Скопировать весь день для Claude</button><span class="day-hint">вставь в Claude — он проведёт по шагам</span><textarea class="day-md" hidden>Ты — мой персональный наставник по настройке AI-агента. Веди меня по этому дню строго по шагам, по одному за раз: коротко объясни что сейчас делаем, дай одну готовую команду или промпт, скажи куда её вставить (Терминал или Claude Code), дождись моего «готово» и только потом следующий шаг. Если что-то пошло не так — помоги починить, не иди дальше. Не вываливай все шаги сразу. Начни с первого шага.
+
+---
+
+# День 6 — Автономия агентов
+
+Агенты работают сами по расписанию, не выходя за подписку. К концу дня — рабочие крон-задачи, хуки и обмен задачами между агентами.
+
+## 1. Платное и бесплатное
+
+С 15 июня 2026 запуск агента из скрипта (Agent SDK, claude -p, GitHub Actions) тарифицируется отдельно. А живая сессия, вызовы из неё, слэш-команды, хуки и субагенты остаются в подписке. Вывод: не дёргаем агента снаружи, а даём ему самому забирать задачи.
+
+## 2. Агент сам забирает задачи
+
+Pull-паттерн: расписание (крон) не вызывает агента, а только кладёт задачу в общую память. Живой агент сам периодически проверяет очередь и забирает. Крон — планировщик, запускает задачу по расписанию. Так всё остаётся в подписке.
+
+```text
+Сделай крон-процесс. Раз в &lt;период&gt; он кладёт задачу в общую память (swarm). Агент в живой сессии сам заберёт её, проверяя очередь. Убедись, что крон не вызывает агента напрямую и не использует Agent SDK.
+```
+
+## 3. Хуки — действия без агента
+
+Хук — скрипт, который срабатывает сам на событие (перед командой, после правки, в конце сессии). Работает помимо агента, поэтому он не может «забыть». Защитный хук (firewall) блокирует опасные команды до запуска:
+
+```bash
+#!/bin/bash
+set -euo pipefail
+COMMAND=&quot;$1&quot;
+FORBIDDEN=(&quot;rm -rf /&quot; &quot;git push --force&quot; &quot;DROP TABLE&quot;)
+for p in &quot;${FORBIDDEN[@]}&quot;; do
+  if echo &quot;$COMMAND&quot; | grep -qE &quot;$p&quot;; then echo &quot;BLOCKED: $p&quot; &gt;&amp;2; exit 2; fi
+done
+exit 0
+```
+
+## 4. Сигнал «я жив» и обмен задачами
+
+Heartbeat — сигнал «я жив» каждые несколько минут, заодно агент проверяет очередь задач. При старте каждый агент обязан: проверить входящие, взять новые задачи, отметиться живым. Так задача от одного агента доходит до другого.
+
+## Результат дня 6
+
+- Понятно что платно, а что в подписке
+- Крон кладёт задачи, агент сам их забирает
+- Стоит защитный хук на опасные команды
+- Агенты обмениваются задачами через общую память
+
+---
+</textarea></div><p>Агенты работают сами по расписанию, не выходя за подписку. К концу дня — рабочие крон-задачи, хуки и обмен задачами между агентами.</p>
+<h2>1. Платное и бесплатное</h2>
+<p>С 15 июня 2026 запуск агента из скрипта (Agent SDK, claude -p, GitHub Actions) тарифицируется отдельно. А живая сессия, вызовы из неё, слэш-команды, хуки и субагенты остаются в подписке. Вывод: не дёргаем агента снаружи, а даём ему самому забирать задачи.</p>
+<h2>2. Агент сам забирает задачи</h2>
+<p>Pull-паттерн: расписание (крон) не вызывает агента, а только кладёт задачу в общую память. Живой агент сам периодически проверяет очередь и забирает. Крон — планировщик, запускает задачу по расписанию. Так всё остаётся в подписке.</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">text</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>Сделай крон-процесс. Раз в &lt;период&gt; он кладёт задачу в общую память (swarm). Агент в живой сессии сам заберёт её, проверяя очередь. Убедись, что крон не вызывает агента напрямую и не использует Agent SDK.</code></pre></div>
+<h2>3. Хуки — действия без агента</h2>
+<p>Хук — скрипт, который срабатывает сам на событие (перед командой, после правки, в конце сессии). Работает помимо агента, поэтому он не может «забыть». Защитный хук (firewall) блокирует опасные команды до запуска:</p>
+<div class="code-wrap"><div class="code-bar"><span class="code-lang">bash</span><button class="copy-btn" onclick="cp(this)">копировать</button></div><pre><code>#!/bin/bash
+set -euo pipefail
+COMMAND=&quot;$1&quot;
+FORBIDDEN=(&quot;rm -rf /&quot; &quot;git push --force&quot; &quot;DROP TABLE&quot;)
+for p in &quot;${FORBIDDEN[@]}&quot;; do
+  if echo &quot;$COMMAND&quot; | grep -qE &quot;$p&quot;; then echo &quot;BLOCKED: $p&quot; &gt;&amp;2; exit 2; fi
+done
+exit 0</code></pre></div>
+<h2>4. Сигнал «я жив» и обмен задачами</h2>
+<p>Heartbeat — сигнал «я жив» каждые несколько минут, заодно агент проверяет очередь задач. При старте каждый агент обязан: проверить входящие, взять новые задачи, отметиться живым. Так задача от одного агента доходит до другого.</p>
+<h2>Результат дня 6</h2>
+<ul><li>Понятно что платно, а что в подписке</li><li>Крон кладёт задачи, агент сам их забирает</li><li>Стоит защитный хук на опасные команды</li><li>Агенты обмениваются задачами через общую память</li></ul></section>
+<section id="d7"><h1 class="day-title">День 7 — Монетизация и продакшн</h1><div class="day-bar"><button class="day-btn" onclick="cpday(this)">📋 Скопировать весь день для Claude</button><span class="day-hint">вставь в Claude — он проведёт по шагам</span><textarea class="day-md" hidden>Ты — мой персональный наставник по настройке AI-агента. Веди меня по этому дню строго по шагам, по одному за раз: коротко объясни что сейчас делаем, дай одну готовую команду или промпт, скажи куда её вставить (Терминал или Claude Code), дождись моего «готово» и только потом следующий шаг. Если что-то пошло не так — помоги починить, не иди дальше. Не вываливай все шаги сразу. Начни с первого шага.
+
+---
+
+# День 7 — Монетизация и продакшн
+
+Куда двигаться после интенсива и на чём строить продукт под масштаб. К концу дня — понимание моделей заработка и дешёвого продакшна.
+
+## 1. Образовательный продукт: аудитория раньше платформы
+
+Высокие чеки в 2026 продаются тяжело. Точка входа — недорогой мини-продукт под одну конкретную боль. Первый шаг — не платформа, а аудитория: рост охватов через короткие ролики (час в неделю с агентом на сценарии), затем подписчики, затем продукт. Тему берут из директа и пересылок, не из головы.
+
+Воронка — путь клиента от первого касания до покупки. Лид-магнит — бесплатная польза за подписку. Трипваер — дешёвый первый продукт, снимает страх и ведёт к основному.
+
+## 2. Агентство и процессы
+
+У владельца две задачи: трафик и продукт. Агенты уменьшают штат, а не заменяют людей: где раньше нужна была команда, теперь хватает одного-двух человек с агентами. Все клиентские процессы (онбординг, КП, план, реализация, продление) живут в общей памяти, каждый этап — отдельный скилл.
+
+## 3. Четыре ниши заработка
+
+| Ниша | Суть |
+|---|---|
+| Контент | Нейроролики и сериалы, дешевле обычного производства в сотни раз |
+| MCP-прослойки | Берёшь бизнес, строишь над ним слой подключений |
+| Образование | Хороший старт понять рынок, но потолок невысокий |
+| Арбитраж токенов | Покупаешь дешёвые токены модели, продаёшь как продукт с наценкой |
+
+## 4. Дешёвый продакшн под масштаб
+
+Ротация подписок не масштабируется. Путь в продакшн на тысячи пользователей — недорогие модели (Minimax, DeepSeek) через API плюс свой Telegram-бот на своём сервере. Такие модели дешевле топовых в десятки раз и закрывают большинство задач, веб-поиск добавляют поверх (Grok, Gemini).
+
+## Результат дня 7
+
+- Понятна стратегия: аудитория, затем мини-продукт
+- Видно, как агенты сжимают штат агентства
+- Разобраны четыре ниши заработка
+- Ясен дешёвый стек для продакшна под масштаб
+</textarea></div><p>Куда двигаться после интенсива и на чём строить продукт под масштаб. К концу дня — понимание моделей заработка и дешёвого продакшна.</p>
+<h2>1. Образовательный продукт: аудитория раньше платформы</h2>
+<p>Высокие чеки в 2026 продаются тяжело. Точка входа — недорогой мини-продукт под одну конкретную боль. Первый шаг — не платформа, а аудитория: рост охватов через короткие ролики (час в неделю с агентом на сценарии), затем подписчики, затем продукт. Тему берут из директа и пересылок, не из головы.</p>
+<p>Воронка — путь клиента от первого касания до покупки. Лид-магнит — бесплатная польза за подписку. Трипваер — дешёвый первый продукт, снимает страх и ведёт к основному.</p>
+<h2>2. Агентство и процессы</h2>
+<p>У владельца две задачи: трафик и продукт. Агенты уменьшают штат, а не заменяют людей: где раньше нужна была команда, теперь хватает одного-двух человек с агентами. Все клиентские процессы (онбординг, КП, план, реализация, продление) живут в общей памяти, каждый этап — отдельный скилл.</p>
+<h2>3. Четыре ниши заработка</h2>
+<table><thead><tr><th>Ниша</th><th>Суть</th></tr></thead><tbody><tr><td>Контент</td><td>Нейроролики и сериалы, дешевле обычного производства в сотни раз</td></tr><tr><td>MCP-прослойки</td><td>Берёшь бизнес, строишь над ним слой подключений</td></tr><tr><td>Образование</td><td>Хороший старт понять рынок, но потолок невысокий</td></tr><tr><td>Арбитраж токенов</td><td>Покупаешь дешёвые токены модели, продаёшь как продукт с наценкой</td></tr></tbody></table>
+<h2>4. Дешёвый продакшн под масштаб</h2>
+<p>Ротация подписок не масштабируется. Путь в продакшн на тысячи пользователей — недорогие модели (Minimax, DeepSeek) через API плюс свой Telegram-бот на своём сервере. Такие модели дешевле топовых в десятки раз и закрывают большинство задач, веб-поиск добавляют поверх (Grok, Gemini).</p>
+<h2>Результат дня 7</h2>
+<ul><li>Понятна стратегия: аудитория, затем мини-продукт</li><li>Видно, как агенты сжимают штат агентства</li><li>Разобраны четыре ниши заработка</li><li>Ясен дешёвый стек для продакшна под масштаб</li></ul></section>
+<footer>Нейроотдел · 7 дней · Opus 4.8</footer>
+</div>
+<div class="overlay" id="ov"><div class="ov-bar"><span class="ov-hint">Выдели весь текст и скопируй вручную</span><button class="ov-close" onclick="closeOv()">Закрыть</button></div><textarea class="ov-text" id="ovText" readonly></textarea></div>
+<script>
+function flash(b,m){const t=b.dataset.l||b.textContent;b.dataset.l=t;b.textContent=m;b.classList.add('ok');setTimeout(()=>{b.textContent=t;b.classList.remove('ok');},1700);}
+function legacy(x,b,m){const a=document.createElement('textarea');a.value=x;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.focus();a.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(a);if(ok)flash(b,m);else showOv(x);}
+function doCopy(x,b,m){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(x).then(()=>flash(b,m)).catch(()=>legacy(x,b,m));}else legacy(x,b,m);}
+function showOv(x){const o=document.getElementById('ov'),t=document.getElementById('ovText');t.value=x;o.classList.add('show');t.focus();t.select();}
+function closeOv(){document.getElementById('ov').classList.remove('show');}
+function cp(b){doCopy(b.closest('.code-wrap').querySelector('code').innerText,b,'скопировано');}
+function cpday(b){doCopy(b.closest('.day-bar').querySelector('.day-md').value,b,'✅ день скопирован');}
+</script>
+</body></html>
